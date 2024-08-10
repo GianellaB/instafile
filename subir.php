@@ -1,6 +1,6 @@
 <?php
 // Nombre de la carpeta a crear (obtenido del parámetro)
-$carpetaNombre = $_GET['nombre'];
+$carpetaNombre = $_GET['carpeta'];
 
 // Ruta donde deseas crear la carpeta (por ejemplo, en la carpeta 'descarga')
 $carpetaRuta = "./descarga/" . $carpetaNombre;
@@ -16,17 +16,15 @@ if (!file_exists($carpetaRuta)) {
 
 // Luego, cuando se procese un archivo, guárdalo en la carpeta creada
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $archivo = $_FILES['archivo'];
+    $archivos = $_FILES['archivos'];
 
-    if (move_uploaded_file($archivo['tmp_name'], $carpetaRuta . '/' . $archivo['name'])) {
-        echo "Archivo subido con éxito.";
-    } else {
-        echo "Error al subir el archivo.";
+    foreach ($archivos['name'] as $index => $nombreArchivo) {
+        $nombreArchivo = str_replace(' ', '_', $nombreArchivo);
+        if (move_uploaded_file($archivos['tmp_name'][$index], $carpetaRuta . '/' . $nombreArchivo)) {
+            echo "Archivo '$nombreArchivo' subido con éxito.<br>";
+        } else {
+            echo "Error al subir el archivo '$nombreArchivo'.<br>";
+        }
     }
 }
 ?>
-
-
-
-
-
